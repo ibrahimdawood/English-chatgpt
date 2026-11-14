@@ -705,32 +705,44 @@
     }
 
     function createSpeechRecognizer(onResult, onEnd, onError) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition && window.AndroidBridge) {
+      // In the Android APK, always use the native Android SpeechRecognizer.
+      // Some Android WebViews expose webkitSpeechRecognition but do not start it.
+      if (window.AndroidBridge && typeof window.AndroidBridge.startSpeechRecognition === 'function') {
         return {
-          start: () => { window.__nativeSpeechCallbacks = { onResult, onEnd, onError }; window.AndroidBridge.startSpeechRecognition("en-US"); },
-          stop: () => window.AndroidBridge.stopSpeechRecognition()
+          start: () => {
+            window.__nativeSpeechCallbacks = { onResult, onEnd, onError };
+            try {
+              window.AndroidBridge.startSpeechRecognition('en-US');
+            } catch (error) {
+              window.__nativeSpeechCallbacks = null;
+              if (onError) onError(String(error));
+              if (onEnd) onEnd();
+            }
+          },
+          stop: () => {
+            try { window.AndroidBridge.stopSpeechRecognition(); }
+            catch (error) { if (onError) onError(String(error)); }
+          }
         };
       }
+
+      // Browser fallback for the standalone web version.
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
         showToast("التعرف الصوتي غير متاح؛ يمكنك استخدام الكتابة.", false);
+        if (onError) onError('Speech recognition is not supported by this browser');
         return null;
       }
       const recognition = new SpeechRecognition();
       recognition.lang = 'en-US';
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
-
       recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
-        onResult(transcript);
+        if (onResult) onResult(transcript);
       };
-      recognition.onerror = (event) => {
-        if (onError) onError(event.error);
-      };
-      recognition.onend = () => {
-        if (onEnd) onEnd();
-      };
+      recognition.onerror = (event) => { if (onError) onError(event.error); };
+      recognition.onend = () => { if (onEnd) onEnd(); };
       return recognition;
     }
 
