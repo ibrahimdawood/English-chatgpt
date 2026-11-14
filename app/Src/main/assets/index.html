@@ -1,1 +1,1376 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FluentC2 AI - تطبيق إتقان الإنجليزية بالذكاء الاصطناعي</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cairo (Arabic) & Inter (English) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            arabic: ['Cairo', 'sans-serif'],
+            english: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            },
+            emerald: {
+              500: '#10b981',
+              600: '#059669',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at top left, #1e1b4b, #0f172a 70%);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .en-text {
+      font-family: 'Inter', sans-serif;
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+
+    /* Custom Scrollbar inside phone frame */
+    .app-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .app-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .app-scroll::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.3);
+      border-radius: 9999px;
+    }
+
+    /* Soundwave Animation */
+    @keyframes wave {
+      0%, 100% { height: 6px; }
+      50% { height: 22px; }
+    }
+    .wave-bar {
+      animation: wave 0.9s infinite ease-in-out;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.45s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.6s; }
+
+    /* Pulse Ring for Mic */
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .mic-recording {
+      animation: pulseRing 1.5s infinite;
+    }
+
+    /* Slide-in Toast */
+    @keyframes slideDown {
+      from { transform: translate(-50%, -20px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .toast-anim {
+      animation: slideDown 0.3s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center sm:p-4 md:p-6">
+
+  <!-- Android Device Frame -->
+  <div id="android-device" class="relative w-full sm:w-[412px] h-screen sm:h-[850px] bg-slate-50 sm:rounded-[44px] sm:border-[10px] sm:border-slate-900 shadow-2xl flex flex-col overflow-hidden">
+
+    <!-- Android Top Status Bar -->
+    <div class="bg-indigo-950 text-white px-6 pt-2 pb-1.5 flex items-center justify-between text-xs select-none shrink-0">
+      <div class="flex items-center gap-1.5 en-text font-medium">
+        <span id="status-time">12:00</span>
+        <i class="fa-solid fa-robot text-emerald-400 text-[10px]"></i>
+      </div>
+      <!-- Camera Punch Hole (Desktop Visual) -->
+      <div class="hidden sm:block w-24 h-4 bg-black rounded-full"></div>
+      <div class="flex items-center gap-2 text-[11px]">
+        <i class="fa-solid fa-wifi"></i>
+        <i class="fa-solid fa-signal"></i>
+        <div class="flex items-center gap-0.5 en-text">
+          <span>98%</span>
+          <i class="fa-solid fa-battery-full text-emerald-400"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Material 3 Top Header -->
+    <header class="bg-gradient-to-l from-indigo-900 via-indigo-800 to-brand-700 text-white px-4 pt-2 pb-4 rounded-b-3xl shadow-md shrink-0 z-10">
+      <div class="flex items-center justify-between mb-2.5">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner">
+            <i class="fa-solid fa-graduation-cap text-amber-300 text-lg"></i>
+          </div>
+          <div>
+            <h1 class="font-extrabold text-base leading-tight tracking-wide flex items-center gap-1.5">
+              <span>FluentC2 AI</span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-1.5 py-0.5 rounded-full en-text font-semibold">PRO</span>
+            </h1>
+            <p class="text-[11px] text-indigo-200">رحلتك الذكية نحو الطلاقة التامة C2</p>
+          </div>
+        </div>
+
+        <!-- XP & Streak Pill -->
+        <div class="flex items-center gap-2">
+          <div class="bg-amber-400/20 border border-amber-300/30 px-2.5 py-1 rounded-2xl flex items-center gap-1.5">
+            <i class="fa-solid fa-bolt text-amber-300 text-xs"></i>
+            <span id="xp-display" class="en-text font-bold text-xs text-amber-200">450 XP</span>
+          </div>
+          <button onclick="configureGeminiKey()" title="إعداد مفتاح Gemini" class="bg-white/10 border border-white/20 px-2 py-1.5 rounded-xl text-[10px] font-bold text-white">
+            <i class="fa-solid fa-key"></i> API
+          </button>
+        </div>
+      </div>
+
+      <!-- CEFR Progress Bar toward C2 -->
+      <div class="bg-indigo-950/50 rounded-2xl p-2.5 border border-white/10">
+        <div class="flex items-center justify-between text-[11px] mb-1">
+          <span class="text-indigo-200 font-semibold">المستوى النشط: <strong id="header-active-level" class="text-white en-text">Level 1 (A1-A2)</strong></span>
+          <span class="text-emerald-300 font-bold en-text" id="c2-percent">18% → C2</span>
+        </div>
+        <div class="w-full h-2 bg-indigo-950 rounded-full overflow-hidden flex gap-0.5">
+          <div id="c2-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 rounded-full transition-all duration-500" style="width: 18%;"></div>
+        </div>
+        <div class="flex justify-between text-[9px] text-indigo-300 mt-1 en-text font-semibold px-0.5">
+          <span>A1-A2 (أساسي)</span>
+          <span>B1-B2 (متوسط)</span>
+          <span class="text-amber-300">C1-C2 (إتقان تام)</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Floating Toast Notification -->
+    <div id="toast-box" class="hidden absolute top-36 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-4 py-2 rounded-2xl shadow-xl border border-indigo-500/40 text-xs font-semibold flex items-center gap-2 whitespace-nowrap toast-anim">
+      <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
+      <span id="toast-msg">تمت إضافة 20 نقطة خبرة!</span>
+    </div>
+
+    <!-- Main Scrollable Viewport -->
+    <main class="flex-1 overflow-y-auto app-scroll relative bg-slate-50">
+
+      <!-- ========================================================= -->
+      <!-- TAB 1: THREE PROGRESSIVE LEVELS (المستويات الثلاثة)       -->
+      <!-- ========================================================= -->
+      <section id="tab-levels" class="p-4 space-y-4 pb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-extrabold text-slate-800">خطة المنهج المتكامل (3 مستويات)</h2>
+            <p class="text-xs text-slate-500">اختر مستواك وتدرب على الاستماع والنطق للوصول إلى C2</p>
+          </div>
+          <span class="text-[11px] bg-indigo-100 text-indigo-700 font-bold px-2.5 py-1 rounded-xl">CEFR Standard</span>
+        </div>
+
+        <!-- Level Cards Container -->
+        <div id="levels-container" class="space-y-3.5">
+          <!-- Rendered dynamically via JS -->
+        </div>
+
+        <!-- Interactive Mini-Lesson / Quiz Modal Drawer (Inline Card) -->
+        <div id="level-lesson-panel" class="hidden bg-white rounded-3xl p-4 shadow-lg border-2 border-indigo-500/30 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+            <div>
+              <span id="lesson-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-indigo-100 text-indigo-700 en-text">A1-A2</span>
+              <h3 id="lesson-title" class="text-sm font-extrabold text-slate-800 mt-1">تدريب الاستماع والتحدث التفاعلي</h3>
+            </div>
+            <button onclick="closeLevelLesson()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Step 1: Listening Challenge -->
+          <div class="bg-indigo-50/70 rounded-2xl p-3 space-y-2 border border-indigo-100">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-indigo-900"><i class="fa-solid fa-headphones ml-1 text-indigo-600"></i> 1. استمع وافهم المعنى:</span>
+              <button onclick="playLessonAudio()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm active:scale-95 transition">
+                <i class="fa-solid fa-volume-high"></i>
+                <span>استماع</span>
+              </button>
+            </div>
+            <p id="lesson-en-sentence" class="en-text text-sm font-bold text-slate-800 bg-white p-2.5 rounded-xl border border-indigo-100/80"></p>
+            <p id="lesson-ar-hint" class="text-xs text-slate-600"></p>
+          </div>
+
+          <!-- Step 2: Interactive Comprehension Question -->
+          <div class="space-y-2">
+            <p id="lesson-question" class="text-xs font-bold text-slate-700"></p>
+            <div id="lesson-options" class="grid grid-cols-1 gap-2"></div>
+          </div>
+
+          <!-- Step 3: Speaking Verification -->
+          <div class="bg-emerald-50/70 rounded-2xl p-3 border border-emerald-200/80 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-900"><i class="fa-solid fa-microphone-lines ml-1 text-emerald-600"></i> 2. انطق الجملة لاجتياز الدرس:</span>
+              <button id="lesson-mic-btn" onclick="practiceLessonSpeaking()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm active:scale-95 transition">
+                <i class="fa-solid fa-microphone"></i>
+                <span>ابدأ التحدث</span>
+              </button>
+            </div>
+            <p id="lesson-speech-result" class="text-[11px] text-emerald-800 font-medium">اضغط "ابدأ التحدث" واقرأ الجملة الإنجليزية بصوت واضح.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- TAB 2: INTERACTIVE AI VOICE & TEXT COACH (المدرب الذكي)   -->
+      <!-- ========================================================= -->
+      <section id="tab-coach" class="hidden h-full flex flex-col">
+        <!-- Scenario & Voice Settings Bar -->
+        <div class="bg-white border-b border-slate-200/80 px-3.5 py-2.5 shrink-0 space-y-2 shadow-sm">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex-1">
+              <label class="block text-[10px] font-bold text-slate-400 mb-0.5">سيناريو المحادثة التفاعلية:</label>
+              <select id="ai-scenario-select" onchange="changeScenario()" class="w-full bg-slate-100 border border-slate-200 text-slate-800 text-xs font-bold rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="coffee">☕ المستوى 1 (A2): طلب قهوة وتعارف يومي</option>
+                <option value="interview" selected>💼 المستوى 2 (B2): مقابلة عمل وتفاوض احترافي</option>
+                <option value="c2_debate">🎓 المستوى 3 (C2): مناظرة قيادية وصياغة بلاغية متقدمة</option>
+                <option value="free_talk">🌍 محادثة حرة مفتوحة (تتكيف تلقائياً حتى C2)</option>
+              </select>
+            </div>
+
+            <!-- TTS Controls -->
+            <div class="flex items-center gap-1.5 pt-3.5">
+              <button id="auto-speak-toggle" onclick="toggleAutoSpeak()" title="نطق ردود الذكاء الاصطناعي تلقائياً" class="px-2.5 py-1.5 rounded-xl bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center gap-1 border border-indigo-200">
+                <i id="auto-speak-icon" class="fa-solid fa-volume-high"></i>
+                <span class="text-[10px]">تلقائي</span>
+              </button>
+              <button id="speed-toggle" onclick="toggleSpeechRate()" title="سرعة النطق" class="px-2 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-[11px] font-bold en-text border border-slate-200">
+                1.0x
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat History Area -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto app-scroll p-3.5 space-y-3.5">
+          <!-- Initial AI Welcome Message -->
+        </div>
+
+        <!-- Active Listening Waveform Banner -->
+        <div id="listening-banner" class="hidden bg-rose-600 text-white px-4 py-2 flex items-center justify-between text-xs shrink-0">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
+            <span class="font-bold">جاري الاستماع لصوتك باللغة الإنجليزية... تحدث الآن</span>
+          </div>
+          <div class="flex items-center gap-1 h-5">
+            <span class="w-1 bg-white rounded-full wave-bar"></span>
+            <span class="w-1 bg-white rounded-full wave-bar"></span>
+            <span class="w-1 bg-white rounded-full wave-bar"></span>
+            <span class="w-1 bg-white rounded-full wave-bar"></span>
+          </div>
+        </div>
+
+        <!-- Input & Mic Bar -->
+        <div class="bg-white border-t border-slate-200 p-2.5 shrink-0">
+          <div class="flex items-center gap-2">
+            <!-- Voice Mic Button -->
+            <button id="chat-mic-btn" onclick="toggleChatMic()" class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 to-brand-500 text-white flex items-center justify-center shadow-md hover:opacity-95 active:scale-95 transition shrink-0" title="تحدث بالإنجليزية">
+              <i id="chat-mic-icon" class="fa-solid fa-microphone text-base"></i>
+            </button>
+
+            <!-- Text Input -->
+            <input id="chat-input" type="text" placeholder="Type or speak in English..." class="en-text flex-1 bg-slate-100 border border-slate-200 rounded-2xl px-3.5 py-2.5 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeypress="if(event.key==='Enter') sendChatMessage()" />
+
+            <!-- Send Button -->
+            <button onclick="sendChatMessage()" class="w-11 h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-md active:scale-95 transition shrink-0" title="إرسال">
+              <i class="fa-solid fa-paper-plane text-sm"></i>
+            </button>
+          </div>
+          <p class="text-[10px] text-slate-400 text-center mt-1.5">المدرب الذكي يصحح أخطاءك ويقترح عليك صياغة بمستوى <strong class="text-indigo-600 en-text">C2 Native</strong></p>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- TAB 3: MASSIVE SENTENCES & DIALOGUES LIBRARY (المكتبة)    -->
+      <!-- ========================================================= -->
+      <section id="tab-library" class="hidden p-4 space-y-3.5 pb-6">
+        <!-- Header & AI Generator Trigger -->
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <h2 class="text-base font-extrabold text-slate-800">المكتبة الضخمة للجمل والمحادثات</h2>
+            <p class="text-[11px] text-slate-500">استمع، تدرب على النطق، أو ولّد جملاً جديدة بالذكاء الاصطناعي</p>
+          </div>
+          <button id="ai-gen-btn" onclick="toggleAIGeneratorBox()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[11px] font-bold px-3 py-2 rounded-2xl shadow-md hover:opacity-95 active:scale-95 transition flex items-center gap-1.5 shrink-0">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+            <span>توليد AI</span>
+          </button>
+        </div>
+
+        <!-- Collapsible Gemini Dynamic Sentence Generator -->
+        <div id="ai-generator-box" class="hidden bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-3xl p-3.5 shadow-lg space-y-2.5 border border-indigo-500/30">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-sparkles"></i> توليد جمل ومحادثات مخصصة via Gemini AI
+            </span>
+            <button onclick="toggleAIGeneratorBox()" class="text-slate-400 hover:text-white text-xs">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <input id="gen-topic-input" type="text" placeholder="الموضوع (مثلاً: الطب، التفاوض...)" class="col-span-2 bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-indigo-200 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+            <select id="gen-level-select" class="bg-slate-800 border border-white/20 rounded-xl px-2 py-2 text-xs font-bold text-amber-300 en-text focus:outline-none">
+              <option value="A1-A2">A1-A2</option>
+              <option value="B1-B2">B1-B2</option>
+              <option value="C1-C2" selected>C1-C2</option>
+            </select>
+          </div>
+          <button id="run-ai-gen-btn" onclick="generateNewLibrarySentences()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-xs py-2.5 rounded-xl shadow transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-bolt"></i>
+            <span>توليد 5 جمل احترافية وإضافتها للمكتبة</span>
+          </button>
+        </div>
+
+        <!-- Search Box -->
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input id="library-search" type="text" oninput="renderLibrary()" placeholder="ابحث باللغة الإنجليزية أو العربية..." class="w-full bg-white border border-slate-200 rounded-2xl pr-9 pl-3.5 py-2.5 text-xs text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+
+        <!-- Level Filter Pills -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          <button onclick="setLibLevelFilter('ALL')" data-lvl="ALL" class="lib-lvl-btn active-lvl bg-indigo-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shrink-0">الكل (<span id="count-all">0</span>)</button>
+          <button onclick="setLibLevelFilter('A1-A2')" data-lvl="A1-A2" class="lib-lvl-btn bg-white text-slate-600 border border-slate-200 text-[11px] font-bold px-3 py-1.5 rounded-xl shrink-0 en-text">A1-A2</button>
+          <button onclick="setLibLevelFilter('B1-B2')" data-lvl="B1-B2" class="lib-lvl-btn bg-white text-slate-600 border border-slate-200 text-[11px] font-bold px-3 py-1.5 rounded-xl shrink-0 en-text">B1-B2</button>
+          <button onclick="setLibLevelFilter('C1-C2')" data-lvl="C1-C2" class="lib-lvl-btn bg-white text-slate-600 border border-slate-200 text-[11px] font-bold px-3 py-1.5 rounded-xl shrink-0 en-text">C1-C2</button>
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          <button onclick="setLibCatFilter('ALL')" data-cat="ALL" class="lib-cat-btn bg-slate-800 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">جميع التصنيفات</button>
+          <button onclick="setLibCatFilter('Daily Life')" data-cat="Daily Life" class="lib-cat-btn bg-white text-slate-600 border border-slate-200 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">الحياة اليومية</button>
+          <button onclick="setLibCatFilter('Business & Tech')" data-cat="Business & Tech" class="lib-cat-btn bg-white text-slate-600 border border-slate-200 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">الأعمال والتقنية</button>
+          <button onclick="setLibCatFilter('Idioms & C2 Nuances')" data-cat="Idioms & C2 Nuances" class="lib-cat-btn bg-white text-slate-600 border border-slate-200 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">مصطلحات C2</button>
+          <button onclick="setLibCatFilter('Full Dialogues')" data-cat="Full Dialogues" class="lib-cat-btn bg-white text-slate-600 border border-slate-200 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">محادثات كاملة</button>
+        </div>
+
+        <!-- Library Items List -->
+        <div id="library-list" class="space-y-3">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Speaking Practice Overlay Modal (for Library Pronunciation Scoring) -->
+    <div id="pronunciation-modal" class="hidden absolute inset-0 bg-slate-950/75 backdrop-blur-sm z-40 flex items-end sm:items-center justify-center p-4">
+      <div class="bg-white w-full rounded-3xl p-5 shadow-2xl space-y-4 border border-slate-100">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-xl">مدقق النطق الذكي (AI Speech Scorer)</span>
+          <button onclick="closePronunciationModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 space-y-1.5">
+          <p class="text-[11px] text-slate-400 font-bold">الجملة المطلوب نطقها:</p>
+          <p id="target-pronounce-en" class="en-text text-sm font-bold text-slate-900 leading-relaxed"></p>
+          <p id="target-pronounce-ar" class="text-xs text-slate-500"></p>
+        </div>
+
+        <div class="flex items-center justify-center gap-3">
+          <button onclick="speakText(document.getElementById('target-pronounce-en').textContent)" class="px-4 py-2.5 rounded-2xl bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center gap-1.5 hover:bg-indigo-200 transition">
+            <i class="fa-solid fa-volume-high"></i>
+            <span>استمع أولاً</span>
+          </button>
+          <button id="modal-record-btn" onclick="startModalSpeechRecognition()" class="px-5 py-2.5 rounded-2xl bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 shadow-md hover:bg-emerald-700 transition">
+            <i class="fa-solid fa-microphone"></i>
+            <span>اضغط وانطق</span>
+          </button>
+        </div>
+
+        <!-- Result Box -->
+        <div id="pronounce-feedback-box" class="hidden rounded-2xl p-3.5 border text-center space-y-1">
+          <div id="pronounce-score-badge" class="en-text text-xl font-extrabold"></div>
+          <p id="pronounce-heard-text" class="en-text text-xs text-slate-600 italic"></p>
+          <p id="pronounce-advice" class="text-xs font-bold"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Android Material 3 Bottom Navigation Bar -->
+    <nav class="bg-white border-t border-slate-200/90 px-3 py-2 flex items-center justify-around shrink-0 shadow-[0_-4px_15px_rgba(0,0,0,0.03)] z-20">
+      <button onclick="switchTab('levels')" id="nav-levels" class="nav-btn flex flex-col items-center gap-1 px-4 py-1 rounded-2xl text-indigo-700 transition">
+        <div class="nav-pill bg-indigo-100 px-4 py-1 rounded-full transition">
+          <i class="fa-solid fa-layer-group text-sm"></i>
+        </div>
+        <span class="text-[11px] font-extrabold">المستويات</span>
+      </button>
+
+      <button onclick="switchTab('coach')" id="nav-coach" class="nav-btn flex flex-col items-center gap-1 px-4 py-1 rounded-2xl text-slate-500 hover:text-indigo-600 transition">
+        <div class="nav-pill px-4 py-1 rounded-full transition relative">
+          <i class="fa-solid fa-robot text-sm"></i>
+          <span class="absolute top-0.5 right-2.5 w-2 h-2 rounded-full bg-emerald-500"></span>
+        </div>
+        <span class="text-[11px] font-bold">المدرب الذكي</span>
+      </button>
+
+      <button onclick="switchTab('library')" id="nav-library" class="nav-btn flex flex-col items-center gap-1 px-4 py-1 rounded-2xl text-slate-500 hover:text-indigo-600 transition">
+        <div class="nav-pill px-4 py-1 rounded-full transition">
+          <i class="fa-solid fa-book-open text-sm"></i>
+        </div>
+        <span class="text-[11px] font-bold">المكتبة الضخمة</span>
+      </button>
+    </nav>
+
+    <!-- Android Home Gesture Handle -->
+    <div class="bg-white pb-1.5 pt-0.5 flex justify-center shrink-0">
+      <div class="w-28 h-1 bg-slate-300 rounded-full"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- APPLICATION LOGIC & GEMINI AI ENGINE                      -->
+  <!-- ========================================================= -->
+  <script>
+    // Gemini API Configuration (Runtime key injected automatically)
+    let apiKey = localStorage.getItem("fluentc2_gemini_api_key") || "";
+    const GEMINI_MODEL = "gemini-3-flash-preview";
+
+    // Application State
+    const savedProgress = (() => {
+      try { return JSON.parse(localStorage.getItem("fluentc2_progress") || "{}"); }
+      catch (_) { return {}; }
+    })();
+    const appState = {
+      xp: Number.isFinite(savedProgress.xp) ? savedProgress.xp : 450,
+      activeLevel: savedProgress.activeLevel || "Level 1 (A1-A2)",
+      completedLessons: Array.isArray(savedProgress.completedLessons) ? savedProgress.completedLessons : [],
+      autoSpeak: savedProgress.autoSpeak !== false,
+      speechRate: savedProgress.speechRate === 0.8 ? 0.8 : 1.0,
+      isRecordingChat: false,
+      chatHistory: [],
+      libLevelFilter: "ALL",
+      libCatFilter: "ALL",
+      currentLesson: null
+    };
+
+    // ---------------------------------------------------------
+    // 1. THREE PROGRESSIVE LEVELS CURRICULUM DATA (A1 -> C2)
+    // ---------------------------------------------------------
+    const LEVELS_DATA = [
+      {
+        id: "lvl1",
+        code: "A1-A2",
+        title: "المستوى الأول: التأسيس وبناء القاعدة",
+        subtitle: "Foundation & Core Fluency",
+        color: "from-sky-500 to-blue-600",
+        badgeBg: "bg-sky-100 text-sky-800",
+        description: "إتقان أهم 2000 كلمة، تركيب الجمل اليومية، وفهم الاستماع البطيء والواضح.",
+        skills: ["النطق الصحيح", "المحادثات اليومية", "القواعد الأساسية"],
+        lesson: {
+          en: "Could you tell me the quickest way to the nearest train station?",
+          ar: "هل يمكنك إخباري بأسرع طريق إلى أقرب محطة قطار؟",
+          question: "ما هو الغرض الرئيسي من هذا السؤال في الحياة اليومية؟",
+          options: [
+            { text: "السؤال بأدب عن الاتجاهات والمواصلات", correct: true },
+            { text: "حجز تذكرة طيران دولية", correct: false },
+            { text: "الاعتذار عن التأخر عن العمل", correct: false }
+          ]
+        }
+      },
+      {
+        id: "lvl2",
+        code: "B1-B2",
+        title: "المستوى الثاني: الطلاقة العملية والتفاعل",
+        subtitle: "Intermediate & Workplace Mastery",
+        color: "from-indigo-600 to-purple-600",
+        badgeBg: "bg-indigo-100 text-indigo-800",
+        description: "التحدث بثقة في العمل والسفر، التعبير عن الآراء، وفهم اللهجات الطبيعية والتعبيرات الشائعة.",
+        skills: ["مقابلات العمل", "التفاوض", "التعبيرات الاصطلاحية"],
+        lesson: {
+          en: "Let's touch base tomorrow morning to iron out the remaining details of the project.",
+          ar: "دعنا نتواصل صباح الغد لتسوية التفاصيل المتبقية من المشروع.",
+          question: "ماذا يعني المصطلح (iron out the details) في بيئة العمل؟",
+          options: [
+            { text: "إلغاء المشروع بالكامل", correct: false },
+            { text: "حل المشكلات الصغيرة وتسوية التفاصيل العالقة", correct: true },
+            { text: "طباعة المستندات الورقية", correct: false }
+          ]
+        }
+      },
+      {
+        id: "lvl3",
+        code: "C1-C2",
+        title: "المستوى الثالث: الإتقان والاحترافية التامة",
+        subtitle: "Native-Like C2 Mastery",
+        color: "from-amber-500 to-orange-600",
+        badgeBg: "bg-amber-100 text-amber-900",
+        description: "إتقان الفروق الدقيقة في اللغة (Nuances)، البلاغة الأكاديمية والقيادية، والمناظرات المعقدة كالمتحدث الأصلي.",
+        skills: ["البلاغة والـ Nuances", "المناظرات القيادية", "التفكير بالإنجليزية"],
+        lesson: {
+          en: "Notwithstanding the unprecedented macroeconomic headwinds, our enterprise demonstrated remarkable resilience.",
+          ar: "على الرغم من الرياح الاقتصادية المعاكسة غير المسبوقة، أظهرت مؤسستنا مرونة استثنائية.",
+          question: "أي كلمة في الجملة تعطي طابعاً رسمياً متقدماً بمستوى C2 بمعنى (على الرغم من)؟",
+          options: [
+            { text: "Notwithstanding", correct: true },
+            { text: "Remarkable", correct: false },
+            { text: "Enterprise", correct: false }
+          ]
+        }
+      }
+    ];
+
+    // ---------------------------------------------------------
+    // 2. MASSIVE SENTENCES & DIALOGUES LIBRARY (48+ ITEMS)
+    // ---------------------------------------------------------
+    let LIBRARY_ITEMS = [
+      // A1-A2 Daily Life
+      { level: "A1-A2", category: "Daily Life", en: "I would like a cup of coffee with a splash of milk, please.", ar: "أود كوباً من القهوة مع القليل من الحليب، من فضلك." },
+      { level: "A1-A2", category: "Daily Life", en: "Excuse me, how long does it take to get to the city center?", ar: "عفواً، كم يستغرق الوصول إلى وسط المدينة؟" },
+      { level: "A1-A2", category: "Daily Life", en: "Could you speak a little more slowly? I am still practicing my English.", ar: "هل يمكنك التحدث ببطء أكثر قليلاً؟ ما زلت أمارس لغتي الإنجليزية." },
+      { level: "A1-A2", category: "Daily Life", en: "I usually wake up early and go for a brisk walk before breakfast.", ar: "أستيقظ عادةً مبكراً وأذهب للمشي السريع قبل الإفطار." },
+      { level: "A1-A2", category: "Daily Life", en: "Do you happen to know what time the pharmacy closes tonight?", ar: "هل تعرف بالصدفة متى تغلق الصيدلية الليلة؟" },
+      { level: "A1-A2", category: "Daily Life", en: "It was a pleasure meeting you! Let's stay in touch.", ar: "كان من دواعي سروري مقابلتك! دعنا نبقَ على تواصل." },
+      { level: "A1-A2", category: "Business & Tech", en: "I have attached the requested documents to my email.", ar: "لقد أرفقت المستندات المطلوبة في بريدي الإلكتروني." },
+      { level: "A1-A2", category: "Business & Tech", en: "Can we reschedule our meeting to Thursday afternoon?", ar: "هل يمكننا إعادة جدولة اجتماعنا إلى بعد ظهر يوم الخميس؟" },
+      { level: "A1-A2", category: "Business & Tech", en: "My internet connection seems a bit unstable today.", ar: "يبدو أن اتصالي بالإنترنت غير مستقر بعض الشيء اليوم." },
+      { level: "A1-A2", category: "Full Dialogues", en: "A: Hi! Are you ready to order?\nB: Yes, I'll have the grilled salmon and a glass of water, please.", ar: "أ: مرحباً! هل أنت مستعد للطلب؟\nب: نعم، سأتناول السلمون المشوي وكوباً من الماء، من فضلك." },
+      { level: "A1-A2", category: "Full Dialogues", en: "A: How was your weekend?\nB: It was super relaxing! I just stayed home and read a great book.", ar: "أ: كيف كانت عطلة نهاية الأسبوع؟\nب: كانت مريحة للغاية! بقيت في المنزل وقرأت كتاباً رائعاً." },
+      { level: "A1-A2", category: "Full Dialogues", en: "A: Do you need any help carrying those bags?\nB: That's very kind of you, thank you so much!", ar: "أ: هل تحتاج إلى أي مساعدة في حمل تلك الحقائب؟\nب: هذا لطف كبير منك، شكراً جزيلاً!" },
+
+      // B1-B2 Intermediate & Workplace
+      { level: "B1-B2", category: "Business & Tech", en: "We need to streamline our workflow to meet the upcoming deadline.", ar: "نحتاج إلى تبسيط سير العمل لدينا للوفاء بالموعد النهائي القادم." },
+      { level: "B1-B2", category: "Business & Tech", en: "From my perspective, investing in customer retention yields higher returns.", ar: "من وجهة نظري، الاستثمار في الحفاظ على العملاء يحقق عوائد أعلى." },
+      { level: "B1-B2", category: "Business & Tech", en: "Could you walk me through the key metrics from last quarter's report?", ar: "هل يمكنك أن تشرح لي المؤشرات الرئيسية من تقرير الربع الأخير؟" },
+      { level: "B1-B2", category: "Business & Tech", en: "Let's weigh the pros and cons before committing to a long-term contract.", ar: "دعنا نزن الإيجابيات والسلبيات قبل الالتزام بعقد طويل الأجل." },
+      { level: "B1-B2", category: "Daily Life", en: "I'm torn between taking a vacation abroad or saving up for a new car.", ar: "أنا محتار بين قضاء عطلة في الخارج أو الادخار لشراء سيارة جديدة." },
+      { level: "B1-B2", category: "Daily Life", en: "Despite the heavy rain, the outdoor concert turned out to be unforgettable.", ar: "على الرغم من الأمطار الغزيرة، اتضح أن الحفل الموسيقي في الهواء الطلق لا يُنسى." },
+      { level: "B1-B2", category: "Daily Life", en: "It takes time to adapt to a new culture, but the experience is rewarding.", ar: "يستغرق التكيف مع ثقافة جديدة وقتاً، لكن التجربة مجزية للغاية." },
+      { level: "B1-B2", category: "Idioms & C2 Nuances", en: "We decided to call it a day after working on the presentation for ten hours.", ar: "قررنا إنهاء العمل لهذا اليوم بعد العمل على العرض التقديمي لمدة عشر ساعات." },
+      { level: "B1-B2", category: "Idioms & C2 Nuances", en: "Hit the nail on the head! That is precisely the root cause of the issue.", ar: "أصبت كبد الحقيقة! هذا هو بالضبط السبب الجذري للمشكلة." },
+      { level: "B1-B2", category: "Idioms & C2 Nuances", en: "Let's play it by ear and see how the weather looks tomorrow morning.", ar: "دعنا نتصرف حسب الظروف ونرى كيف سيبدو الطقس صباح الغد." },
+      { level: "B1-B2", category: "Full Dialogues", en: "A: What would you say is your greatest strength?\nB: I thrive under pressure and excel at bridging communication gaps across teams.", ar: "أ: ما هي أعظم نقاط قوتك برأيك؟\nب: أزدهر تحت الضغط وأتفوق في سد فجوات التواصل بين الفرق." },
+      { level: "B1-B2", category: "Full Dialogues", en: "A: Are we still on track for the product launch?\nB: Mostly yes, though we're ironing out a minor bug in the checkout flow.", ar: "أ: هل ما زلنا على المسار الصحيح لإطلاق المنتج؟\nب: نعم إلى حد كبير، رغم أننا نعالج خللاً بسيطاً في خطوات الدفع." },
+
+      // C1-C2 Mastery & Nuance
+      { level: "C1-C2", category: "Idioms & C2 Nuances", en: "Her argument was so cogent and well-articulated that it left no room for rebuttal.", ar: "كانت حجتها مقنعة ومصاغة ببراعة لدرجة أنها لم تترك مجالاً للدحض." },
+      { level: "C1-C2", category: "Idioms & C2 Nuances", en: "The politician's remarks were deliberately ambiguous, allowing him to hedge his bets.", ar: "كانت تصريحات السياسي غامضة عمداً، مما سمح له بتأمين موقفه من جميع الاحتمالات." },
+      { level: "C1-C2", category: "Idioms & C2 Nuances", en: "To err is human, yet steadfastly refusing to acknowledge one's blunders is sheer hubris.", ar: "الخطأ طبيعة بشرية، لكن الإصرار على عدم الاعتراف بالهفوات هو محض غطرسة." },
+      { level: "C1-C2", category: "Idioms & C2 Nuances", en: "That proposal is a double-edged sword; it boosts short-term liquidity at the expense of equity.", ar: "هذا المقترح سلاح ذو حدين؛ فهو يعزز السيولة قصيرة الأجل على حساب حقوق الملكية." },
+      { level: "C1-C2", category: "Idioms & C2 Nuances", en: "He has an uncanny knack for cutting through the noise and pinpointing what truly matters.", ar: "لديه موهبة خارقة في تجاوز الضجيج وتحديد ما يهم حقاً بدقة." },
+      { level: "C1-C2", category: "Business & Tech", en: "Artificial intelligence is reshaping the epistemological boundaries of modern scientific inquiry.", ar: "يعيد الذكاء الاصطناعي تشكيل الحدود المعرفية للبحث العلمي الحديث." },
+      { level: "C1-C2", category: "Business & Tech", en: "Without a robust governance framework, rapid scaling can inadvertently erode institutional trust.", ar: "بدون إطار حوكمة متين، قد يؤدي التوسع السريع دون قصد إلى تآكل الثقة المؤسسية." },
+      { level: "C1-C2", category: "Business & Tech", en: "We must foster a culture of intellectual humility where constructive dissent is welcomed.", ar: "يجب أن نعزز ثقافة التواضع الفكري حيث يُرحب بالرأي المخالف البنّاء." },
+      { level: "C1-C2", category: "Business & Tech", en: "The merger hinges on regulatory approval and seamless cultural integration across both entities.", ar: "يتوقف الاندماج على الموافقة التنظيمية والتكامل الثقافي السلس بين الكيانين." },
+      { level: "C1-C2", category: "Daily Life", en: "There is a poignant beauty in watching autumn leaves drift effortlessly onto a quiet lake.", ar: "هناك جمال شاعري مؤثر في مشاهدة أوراق الخريف تتساقط بانسيابية على بحيرة هادئة." },
+      { level: "C1-C2", category: "Daily Life", en: "True eloquence lies not in ostentatious vocabulary, but in clarity, precision, and empathy.", ar: "الفصاحة الحقيقية لا تكمن في المفردات المتكلفة، بل في الوضوح والدقة والتعاطف." },
+      { level: "C1-C2", category: "Full Dialogues", en: "A: Don't you think automation will inevitably render many professions obsolete?\nB: While displacement is undeniable, history suggests human ingenuity consistently spawns unforeseen avenues of value.", ar: "أ: ألا تعتقد أن الأتمتة ستجعل العديد من المهن عفا عليها الزمن حتماً؟\nب: رغم أن الإزاحة المهنية لا يمكن إنكارها، إلا أن التاريخ يشير إلى أن براعة الإنسان تولّد باستمرار آفاقاً غير متوقعة للقيمة." },
+      { level: "C1-C2", category: "Full Dialogues", en: "A: The board remains skeptical about pivoting so abruptly.\nB: Understandably so; however, clinging to a stagnant model poses a far graver existential risk.", ar: "أ: لا يزال مجلس الإدارة متشككاً بشأن التحول المفاجئ.\nب: هذا مفهوم؛ ومع ذلك، فإن التمسك بنموذج راكد يشكل خطراً وجودياً أشد جسامة." }
+    ];
+
+    // ---------------------------------------------------------
+    // 3. INITIALIZATION & NAVIGATION
+    // ---------------------------------------------------------
+    window.onload = function () {
+      updateClock();
+      setInterval(updateClock, 30000);
+      renderLevels();
+      renderLibrary();
+      initChatScenario();
+      updateXPUI();
+    };
+
+    function updateClock() {
+      const now = new Date();
+      const hrs = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('status-time').textContent = `${hrs}:${mins}`;
+    }
+
+    function showToast(msg, isSuccess = true) {
+      const box = document.getElementById('toast-box');
+      const icon = document.getElementById('toast-icon');
+      const text = document.getElementById('toast-msg');
+      text.textContent = msg;
+      icon.className = isSuccess
+        ? "fa-solid fa-circle-check text-emerald-400"
+        : "fa-solid fa-circle-info text-amber-400";
+      box.classList.remove('hidden');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        box.classList.add('hidden');
+      }, 3000);
+    }
+
+    function addXP(points, reason) {
+      appState.xp += points;
+      updateXPUI();
+      showToast(`+${points} XP — ${reason}`);
+    }
+
+    function updateXPUI() {
+      localStorage.setItem("fluentc2_progress", JSON.stringify({
+        xp: appState.xp, activeLevel: appState.activeLevel,
+        completedLessons: appState.completedLessons, autoSpeak: appState.autoSpeak,
+        speechRate: appState.speechRate
+      }));
+      document.getElementById('xp-display').textContent = `${appState.xp} XP`;
+      const pct = Math.min(100, Math.round((appState.xp / 2500) * 100));
+      document.getElementById('c2-percent').textContent = `${pct}% → C2`;
+      document.getElementById('c2-progress-bar').style.width = `${pct}%`;
+      document.getElementById('header-active-level').textContent = appState.activeLevel;
+    }
+
+    function switchTab(tabName) {
+      ['levels', 'coach', 'library'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        const btn = document.getElementById(`nav-${t}`);
+        const pill = btn.querySelector('.nav-pill');
+        btn.classList.remove('text-indigo-700');
+        btn.classList.add('text-slate-500');
+        pill.classList.remove('bg-indigo-100');
+      });
+
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`nav-${tabName}`);
+      activeBtn.classList.remove('text-slate-500');
+      activeBtn.classList.add('text-indigo-700');
+      activeBtn.querySelector('.nav-pill').classList.add('bg-indigo-100');
+    }
+
+    // ---------------------------------------------------------
+    // 4. SPEECH SYNTHESIS (TTS) & SPEECH RECOGNITION (STT)
+    // ---------------------------------------------------------
+    function speakText(text, rateOverride = null) {
+      // Clean speaker prefixes like A: or B: for natural reading
+      const cleanText = text.replace(/\b[AB]:\s*/g, '');
+      if (window.AndroidBridge && window.AndroidBridge.speak) {
+        window.AndroidBridge.speak(cleanText, rateOverride || appState.speechRate);
+        return;
+      }
+      if (!('speechSynthesis' in window)) {
+        showToast("النطق الصوتي غير متاح على هذا الجهاز", false);
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'en-US';
+      utterance.rate = rateOverride || appState.speechRate;
+      utterance.pitch = 1.0;
+
+      // Prefer a natural English voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = voices.find(v => v.lang.includes('en-US') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha')))
+                     || voices.find(v => v.lang.startsWith('en'));
+      if (preferred) utterance.voice = preferred;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function toggleAutoSpeak() {
+      appState.autoSpeak = !appState.autoSpeak;
+      const btn = document.getElementById('auto-speak-toggle');
+      const icon = document.getElementById('auto-speak-icon');
+      if (appState.autoSpeak) {
+        btn.className = "px-2.5 py-1.5 rounded-xl bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center gap-1 border border-indigo-200";
+        icon.className = "fa-solid fa-volume-high";
+      } else {
+        btn.className = "px-2.5 py-1.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold flex items-center gap-1 border border-slate-200";
+        icon.className = "fa-solid fa-volume-xmark";
+      }
+    }
+
+    function toggleSpeechRate() {
+      appState.speechRate = appState.speechRate === 1.0 ? 0.8 : 1.0;
+      document.getElementById('speed-toggle').textContent = `${appState.speechRate.toFixed(1)}x`;
+      showToast(`سرعة النطق: ${appState.speechRate}x`);
+    }
+
+    function createSpeechRecognizer(onResult, onEnd, onError) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition && window.AndroidBridge) {
+        return {
+          start: () => { window.__nativeSpeechCallbacks = { onResult, onEnd, onError }; window.AndroidBridge.startSpeechRecognition("en-US"); },
+          stop: () => window.AndroidBridge.stopSpeechRecognition()
+        };
+      }
+      if (!SpeechRecognition) {
+        showToast("التعرف الصوتي غير متاح؛ يمكنك استخدام الكتابة.", false);
+        return null;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        onResult(transcript);
+      };
+      recognition.onerror = (event) => {
+        if (onError) onError(event.error);
+      };
+      recognition.onend = () => {
+        if (onEnd) onEnd();
+      };
+      return recognition;
+    }
+
+    // ---------------------------------------------------------
+    // 5. TAB 1: LEVELS RENDERING & INTERACTIVE LESSONS
+    // ---------------------------------------------------------
+    function renderLevels() {
+      const container = document.getElementById('levels-container');
+      container.innerHTML = LEVELS_DATA.map((lvl, idx) => {
+        const isSelected = appState.activeLevel.includes(lvl.code);
+        const isDone = appState.completedLessons.includes(lvl.id);
+        return `
+          <div class="bg-white rounded-3xl p-4 shadow-sm border-2 ${isSelected ? 'border-indigo-600' : 'border-slate-100'} transition">
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="en-text text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg ${lvl.badgeBg}">${lvl.code}</span>
+                  ${isDone ? '<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg"><i class="fa-solid fa-check ml-1"></i>مكتمل</span>' : ''}
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-800 mt-1.5">${lvl.title}</h3>
+                <p class="en-text text-[11px] font-semibold text-indigo-600">${lvl.subtitle}</p>
+              </div>
+              <div class="w-10 h-10 rounded-2xl bg-gradient-to-br ${lvl.color} text-white flex items-center justify-center font-extrabold en-text text-sm shadow">
+                0${idx + 1}
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed mb-3">${lvl.description}</p>
+
+            <div class="flex flex-wrap gap-1.5 mb-3.5">
+              ${lvl.skills.map(s => `<span class="text-[10px] font-bold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-xl"># ${s}</span>`).join('')}
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="selectActiveLevel('${lvl.id}')" class="flex-1 py-2 rounded-xl text-xs font-bold border ${isSelected ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'} transition">
+                ${isSelected ? '✓ المستوى النشط حالياً' : 'تعيين كمستواي'}
+              </button>
+              <button onclick="openLevelLesson('${lvl.id}')" class="flex-1 py-2 rounded-xl text-xs font-bold bg-gradient-to-r ${lvl.color} text-white shadow-sm hover:opacity-95 active:scale-95 transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-play text-[10px]"></i>
+                <span>ابدأ التمرين التفاعلي</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectActiveLevel(lvlId) {
+      const lvl = LEVELS_DATA.find(l => l.id === lvlId);
+      if (!lvl) return;
+      appState.activeLevel = `Level ${lvlId.replace('lvl', '')} (${lvl.code})`;
+      updateXPUI();
+      renderLevels();
+      showToast(`تم تفعيل ${appState.activeLevel}`);
+    }
+
+    function openLevelLesson(lvlId) {
+      const lvl = LEVELS_DATA.find(l => l.id === lvlId);
+      if (!lvl) return;
+      appState.currentLesson = lvl;
+
+      const panel = document.getElementById('level-lesson-panel');
+      document.getElementById('lesson-badge').textContent = lvl.code;
+      document.getElementById('lesson-title').textContent = lvl.title;
+      document.getElementById('lesson-en-sentence').textContent = lvl.lesson.en;
+      document.getElementById('lesson-ar-hint').textContent = `الترجمة: ${lvl.lesson.ar}`;
+      document.getElementById('lesson-question').textContent = lvl.lesson.question;
+      document.getElementById('lesson-speech-result').textContent = 'اضغط "ابدأ التحدث" واقرأ الجملة الإنجليزية بصوت واضح.';
+
+      const optionsBox = document.getElementById('lesson-options');
+      optionsBox.innerHTML = lvl.lesson.options.map((opt, idx) => `
+        <button onclick="checkLessonAnswer(${idx}, ${opt.correct})" class="lesson-opt-btn text-right w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-indigo-50 transition">
+          ${opt.text}
+        </button>
+      `).join('');
+
+      panel.classList.remove('hidden');
+      panel.scrollIntoView({ behavior: 'smooth' });
+      speakText(lvl.lesson.en);
+    }
+
+    function closeLevelLesson() {
+      document.getElementById('level-lesson-panel').classList.add('hidden');
+    }
+
+    function playLessonAudio() {
+      if (appState.currentLesson) {
+        speakText(appState.currentLesson.lesson.en);
+      }
+    }
+
+    function checkLessonAnswer(idx, isCorrect) {
+      const btns = document.querySelectorAll('.lesson-opt-btn');
+      btns.forEach((b, i) => {
+        if (i === idx) {
+          b.className = isCorrect
+            ? "lesson-opt-btn text-right w-full p-2.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-xs font-bold text-emerald-800"
+            : "lesson-opt-btn text-right w-full p-2.5 rounded-xl border-2 border-rose-400 bg-rose-50 text-xs font-bold text-rose-800";
+        }
+      });
+      if (isCorrect) {
+        addXP(25, "إجابة صحيحة في تمرين الاستماع!");
+      } else {
+        showToast("حاول مرة أخرى! استمع للجملة بتركيز.", false);
+      }
+    }
+
+    function practiceLessonSpeaking() {
+      if (!appState.currentLesson) return;
+      const resultEl = document.getElementById('lesson-speech-result');
+      const micBtn = document.getElementById('lesson-mic-btn');
+      resultEl.textContent = "جاري الاستماع لصوتك... اقرأ الجملة الآن...";
+      micBtn.classList.add('mic-recording', 'bg-rose-600');
+
+      const rec = createSpeechRecognizer(
+        (spoken) => {
+          const score = calculateSimilarity(spoken, appState.currentLesson.lesson.en);
+          resultEl.innerHTML = `سمعتك تقول: <span class="en-text font-bold">"${spoken}"</span> — دقة النطق: <strong>${score}%</strong>`;
+          if (score >= 55) {
+            if (!appState.completedLessons.includes(appState.currentLesson.id)) {
+              appState.completedLessons.push(appState.currentLesson.id);
+              renderLevels();
+            }
+            addXP(50, "اجتياز تمرين التحدث بنجاح!");
+          } else {
+            showToast("حاول نطق الكلمات بوضوح أكبر.", false);
+          }
+        },
+        () => {
+          micBtn.classList.remove('mic-recording', 'bg-rose-600');
+        },
+        () => {
+          resultEl.textContent = "تعذر التقاط الصوت. تأكد من إذن الميكروفون.";
+          micBtn.classList.remove('mic-recording', 'bg-rose-600');
+        }
+      );
+      if (rec) rec.start();
+    }
+
+    // ---------------------------------------------------------
+    // 6. TAB 2: GEMINI AI INTERACTIVE VOICE & TEXT COACH
+    // ---------------------------------------------------------
+    const SCENARIO_PROMPTS = {
+      coffee: {
+        opener: "Hi there! Welcome to Artisan Roasters. What can I get started for you today?",
+        arHint: "مرحباً بك في المقهى! ماذا تود أن تطلب اليوم؟",
+        context: "Beginner/Elementary (A2) friendly barista conversation at a coffee shop."
+      },
+      interview: {
+        opener: "Good morning! Thanks for coming in today. To kick things off, could you tell me a bit about a challenging project you recently spearheaded?",
+        arHint: "صباح الخير! للبدء، هل يمكنك إخباري عن مشروع مليء بالتحديات قدته مؤخراً؟",
+        context: "Intermediate/Upper-Intermediate (B2) professional job interview and negotiation."
+      },
+      c2_debate: {
+        opener: "Welcome to our executive symposium. Today's proposition is: 'Unfettered technological acceleration inevitably outpaces ethical governance.' Where do you stand on this nuanced issue?",
+        arHint: "مرحباً بك في ندوتنا القيادية. أطروحة اليوم: التسارع التكنولوجي غير المقيد يسبق حتماً الحوكمة الأخلاقية. ما موقفك؟",
+        context: "Mastery (C2) intellectual debate requiring sophisticated vocabulary, rhetorical precision, and nuanced argumentation."
+      },
+      free_talk: {
+        opener: "Hello! I'm your personal AI English Coach. Speak or type about any topic on your mind, and I will elevate your phrasing to C2 native mastery!",
+        arHint: "أهلاً بك! أنا مدربك الشخصي. تحدث أو اكتب في أي موضوع وسأرتقي بصياغتك إلى مستوى C2.",
+        context: "Adaptive open-ended conversation aimed at upgrading the user's English toward C2 fluency."
+      }
+    };
+
+    function initChatScenario() {
+      const key = document.getElementById('ai-scenario-select').value;
+      const sc = SCENARIO_PROMPTS[key];
+      appState.chatHistory = [];
+      const chatBox = document.getElementById('chat-messages');
+      chatBox.innerHTML = '';
+      appendAIMessage(sc.opener, null, null, sc.arHint);
+    }
+
+    function changeScenario() {
+      initChatScenario();
+      const key = document.getElementById('ai-scenario-select').value;
+      if (appState.autoSpeak) {
+        speakText(SCENARIO_PROMPTS[key].opener);
+      }
+    }
+
+    function appendUserMessage(text) {
+      const chatBox = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = "flex justify-end";
+      div.innerHTML = `
+        <div class="max-w-[82%] bg-indigo-600 text-white rounded-3xl rounded-tl-md px-4 py-2.5 shadow-sm">
+          <p class="en-text text-xs font-medium leading-relaxed">${escapeHtml(text)}</p>
+        </div>
+      `;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function appendAIMessage(replyEn, grammarFeedback = null, c2Upgrade = null, arTranslation = null) {
+      const chatBox = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = "flex flex-col items-start space-y-1.5";
+
+      const safeReply = replyEn.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+      let feedbackHtml = '';
+      if (grammarFeedback || c2Upgrade) {
+        feedbackHtml = `
+          <div class="max-w-[90%] bg-amber-50/95 border border-amber-200 rounded-2xl p-2.5 text-[11px] space-y-1.5 shadow-sm">
+            <div class="flex items-center gap-1.5 text-amber-900 font-extrabold">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i>
+              <span>تحليل المدرب الذكي وترقية الصياغة إلى C2:</span>
+            </div>
+            ${grammarFeedback ? `<p class="text-slate-700 leading-relaxed"><strong class="text-indigo-700">ملاحظة:</strong> ${escapeHtml(grammarFeedback)}</p>` : ''}
+            ${c2Upgrade ? `
+              <div class="bg-white rounded-xl p-2 border border-amber-200/80">
+                <div class="flex items-center justify-between mb-0.5">
+                  <span class="text-[10px] font-extrabold text-emerald-700 en-text">✨ C2 Native Phrasing:</span>
+                  <button onclick="speakText('${c2Upgrade.replace(/'/g, "\\'")}')" class="text-indigo-600 hover:text-indigo-800 text-[10px] font-bold flex items-center gap-1">
+                    <i class="fa-solid fa-volume-high"></i> استمع
+                  </button>
+                </div>
+                <p class="en-text text-xs font-bold text-slate-900">${escapeHtml(c2Upgrade)}</p>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+
+      div.innerHTML = `
+        <div class="max-w-[86%] bg-white border border-slate-200/90 text-slate-800 rounded-3xl rounded-tr-md px-4 py-3 shadow-sm space-y-1.5">
+          <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-1">
+            <span class="text-[10px] font-extrabold text-indigo-600 flex items-center gap-1">
+              <i class="fa-solid fa-robot"></i> Gemini AI Coach
+            </span>
+            <button onclick="speakText('${safeReply}')" class="text-slate-400 hover:text-indigo-600 text-xs transition" title="إعادة الاستماع">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </div>
+          <p class="en-text text-xs font-semibold text-slate-900 leading-relaxed">${escapeHtml(replyEn)}</p>
+          ${arTranslation ? `<p class="text-[11px] text-slate-500 pt-0.5">${escapeHtml(arTranslation)}</p>` : ''}
+        </div>
+        ${feedbackHtml}
+      `;
+
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      const chatBox = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.id = "ai-typing-indicator";
+      div.className = "flex items-center gap-2 bg-white border border-slate-200 rounded-2xl px-3.5 py-2.5 w-fit shadow-sm";
+      div.innerHTML = `
+        <span class="w-2 h-2 bg-indigo-500 rounded-full animate-bounce"></span>
+        <span class="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" style="animation-delay: 0.15s"></span>
+        <span class="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+        <span class="text-[11px] font-bold text-slate-500">المدرب الذكي يحلل إجابتك...</span>
+      `;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const el = document.getElementById('ai-typing-indicator');
+      if (el) el.remove();
+    }
+
+    let activeChatRecognizer = null;
+    function toggleChatMic() {
+      const micBtn = document.getElementById('chat-mic-btn');
+      const banner = document.getElementById('listening-banner');
+
+      if (appState.isRecordingChat && activeChatRecognizer) {
+        activeChatRecognizer.stop();
+        return;
+      }
+
+      activeChatRecognizer = createSpeechRecognizer(
+        (transcript) => {
+          document.getElementById('chat-input').value = transcript;
+          sendChatMessage();
+        },
+        () => {
+          appState.isRecordingChat = false;
+          micBtn.classList.remove('mic-recording', 'from-rose-600', 'to-red-500');
+          banner.classList.add('hidden');
+        },
+        () => {
+          appState.isRecordingChat = false;
+          micBtn.classList.remove('mic-recording', 'from-rose-600', 'to-red-500');
+          banner.classList.add('hidden');
+          showToast("لم يتم التقاط صوت، حاول مجدداً.", false);
+        }
+      );
+
+      if (activeChatRecognizer) {
+        appState.isRecordingChat = true;
+        micBtn.classList.add('mic-recording', 'from-rose-600', 'to-red-500');
+        banner.classList.remove('hidden');
+        activeChatRecognizer.start();
+      }
+    }
+
+    async function sendChatMessage() {
+      const inputEl = document.getElementById('chat-input');
+      const userText = inputEl.value.trim();
+      if (!userText) return;
+
+      inputEl.value = '';
+      appendUserMessage(userText);
+      showTypingIndicator();
+
+      const scenarioKey = document.getElementById('ai-scenario-select').value;
+      const scenarioContext = SCENARIO_PROMPTS[scenarioKey].context;
+
+      appState.chatHistory.push({ role: "user", parts: [{ text: userText }] });
+
+      const systemPrompt = `You are an elite English Language Coach helping an Arabic-speaking learner reach C2 mastery.
+Scenario Context: ${scenarioContext}.
+For the user's message:
+1. Reply naturally in English to keep the conversation engaging and realistic.
+2. Provide a brief, encouraging note in Arabic analyzing any grammar/vocabulary improvement needed (or praising accuracy).
+3. Provide a "c2Upgrade": rewrite the user's exact thought as an eloquent C2 native speaker would express it.
+4. Provide a concise Arabic translation of your English reply.`;
+
+      const payload = {
+        contents: appState.chatHistory,
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "OBJECT",
+            properties: {
+              replyEn: { type: "STRING" },
+              arTranslation: { type: "STRING" },
+              grammarFeedbackAr: { type: "STRING" },
+              c2UpgradeEn: { type: "STRING" }
+            },
+            required: ["replyEn", "arTranslation", "grammarFeedbackAr", "c2UpgradeEn"]
+          }
+        }
+      };
+
+      try {
+        const result = await callGeminiWithBackoff(payload);
+        removeTypingIndicator();
+        const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = JSON.parse(rawText);
+
+        appState.chatHistory.push({ role: "model", parts: [{ text: parsed.replyEn }] });
+        appendAIMessage(parsed.replyEn, parsed.grammarFeedbackAr, parsed.c2UpgradeEn, parsed.arTranslation);
+        addXP(15, "محادثة تفاعلية مع المدرب الذكي!");
+
+        if (appState.autoSpeak) {
+          speakText(parsed.replyEn);
+        }
+      } catch (err) {
+        removeTypingIndicator();
+        if (!apiKey) {
+          appendAIMessage("I can continue practising with you once AI access is configured.", "لا يوجد مفتاح Gemini API حالياً. اضغط زر API أعلى التطبيق لإضافته بعد إنشائه.", null, "يمكننا متابعة التدريب بعد إعداد خدمة الذكاء الاصطناعي.");
+          showToast("يلزم إعداد مفتاح Gemini لتفعيل المدرب الذكي", false);
+          return;
+        }
+        const fallbackReply = "That's a very interesting point! Could you elaborate a bit more on your reasoning?";
+        appendAIMessage(
+          fallbackReply,
+          "أحسنت المحاولة! حاول استخدام روابط جمل أكثر دقة مثل (Furthermore) أو (Consequently).",
+          "I wholeheartedly concur, though I would contend that broader contextual nuances warrant deeper scrutiny.",
+          "هذه نقطة مثيرة للاهتمام للغاية! هل يمكنك التوضيح أكثر؟"
+        );
+        if (appState.autoSpeak) speakText(fallbackReply);
+      }
+    }
+
+    // ---------------------------------------------------------
+    // 7. TAB 3: MASSIVE LIBRARY, SEARCH, FILTER & AI GENERATION
+    // ---------------------------------------------------------
+    function setLibLevelFilter(lvl) {
+      appState.libLevelFilter = lvl;
+      document.querySelectorAll('.lib-lvl-btn').forEach(btn => {
+        if (btn.dataset.lvl === lvl) {
+          btn.className = "lib-lvl-btn bg-indigo-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shrink-0";
+        } else {
+          btn.className = "lib-lvl-btn bg-white text-slate-600 border border-slate-200 text-[11px] font-bold px-3 py-1.5 rounded-xl shrink-0";
+        }
+      });
+      renderLibrary();
+    }
+
+    function setLibCatFilter(cat) {
+      appState.libCatFilter = cat;
+      document.querySelectorAll('.lib-cat-btn').forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.className = "lib-cat-btn bg-slate-800 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0";
+        } else {
+          btn.className = "lib-cat-btn bg-white text-slate-600 border border-slate-200 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0";
+        }
+      });
+      renderLibrary();
+    }
+
+    function renderLibrary() {
+      const search = document.getElementById('library-search').value.trim().toLowerCase();
+      document.getElementById('count-all').textContent = LIBRARY_ITEMS.length;
+
+      const filtered = LIBRARY_ITEMS.filter(item => {
+        const matchLvl = appState.libLevelFilter === 'ALL' || item.level === appState.libLevelFilter;
+        const matchCat = appState.libCatFilter === 'ALL' || item.category === appState.libCatFilter;
+        const matchSearch = !search || item.en.toLowerCase().includes(search) || item.ar.includes(search);
+        return matchLvl && matchCat && matchSearch;
+      });
+
+      const listEl = document.getElementById('library-list');
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 font-bold">لا توجد نتائج مطابقة لبحثك. جرب توليد جمل جديدة بالذكاء الاصطناعي!</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map((item, idx) => {
+        const badgeColor = item.level === 'C1-C2'
+          ? 'bg-amber-100 text-amber-800'
+          : item.level === 'B1-B2'
+            ? 'bg-indigo-100 text-indigo-800'
+            : 'bg-sky-100 text-sky-800';
+
+        const safeEn = item.en.replace(/'/g, "\\'").replace(/\n/g, " ");
+        const safeAr = item.ar.replace(/'/g, "\\'").replace(/\n/g, " ");
+
+        return `
+          <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200/80 space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="en-text text-[10px] font-extrabold px-2 py-0.5 rounded-md ${badgeColor}">${item.level}</span>
+                <span class="en-text text-[10px] font-semibold text-slate-400">${item.category}</span>
+              </div>
+              <span class="text-[10px] text-slate-300 en-text">#${idx + 1}</span>
+            </div>
+
+            <p class="en-text text-xs font-bold text-slate-900 leading-relaxed whitespace-pre-line">${escapeHtml(item.en)}</p>
+            <p class="text-[11px] text-slate-600 leading-relaxed whitespace-pre-line">${escapeHtml(item.ar)}</p>
+
+            <div class="flex items-center gap-2 pt-1 border-t border-slate-100">
+              <button onclick="speakText('${safeEn}')" class="flex-1 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-bold flex items-center justify-center gap-1.5 transition">
+                <i class="fa-solid fa-volume-high"></i>
+                <span>استماع</span>
+              </button>
+              <button onclick="openPronunciationModal('${safeEn}', '${safeAr}')" class="flex-1 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-bold flex items-center justify-center gap-1.5 transition">
+                <i class="fa-solid fa-microphone"></i>
+                <span>تدرب على النطق</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleAIGeneratorBox() {
+      document.getElementById('ai-generator-box').classList.toggle('hidden');
+    }
+
+    async function generateNewLibrarySentences() {
+      const topic = document.getElementById('gen-topic-input').value.trim() || "Leadership & Global Economics";
+      const level = document.getElementById('gen-level-select').value;
+      const btn = document.getElementById('run-ai-gen-btn');
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>جاري التوليد الذكي عبر Gemini...</span>`;
+
+      const prompt = `Generate 5 high-value, natural English sentences or short dialogues for level ${level} about the topic: "${topic}". Provide accurate Arabic translations. Choose category from: "Daily Life", "Business & Tech", "Idioms & C2 Nuances", or "Full Dialogues".`;
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                level: { type: "STRING" },
+                category: { type: "STRING" },
+                en: { type: "STRING" },
+                ar: { type: "STRING" }
+              },
+              required: ["level", "category", "en", "ar"]
+            }
+          }
+        }
+      };
+
+      try {
+        const res = await callGeminiWithBackoff(payload);
+        const text = res?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const newItems = JSON.parse(text);
+        if (Array.isArray(newItems) && newItems.length > 0) {
+          newItems.forEach(it => it.level = level);
+          LIBRARY_ITEMS = [...newItems, ...LIBRARY_ITEMS];
+          setLibLevelFilter(level);
+          addXP(30, `توليد ${newItems.length} جمل جديدة في المكتبة!`);
+          document.getElementById('ai-generator-box').classList.add('hidden');
+        }
+      } catch (err) {
+        showToast(!apiKey ? "أضف مفتاح Gemini من زر API أولاً" : "حدث خطأ أثناء الاتصال بالذكاء الاصطناعي، حاول مجدداً.", false);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-bolt"></i> <span>توليد 5 جمل احترافية وإضافتها للمكتبة</span>`;
+      }
+    }
+
+    // ---------------------------------------------------------
+    // 8. PRONUNCIATION SCORING MODAL
+    // ---------------------------------------------------------
+    function openPronunciationModal(enText, arText) {
+      document.getElementById('target-pronounce-en').textContent = enText;
+      document.getElementById('target-pronounce-ar').textContent = arText;
+      document.getElementById('pronounce-feedback-box').classList.add('hidden');
+      document.getElementById('pronunciation-modal').classList.remove('hidden');
+    }
+
+    function closePronunciationModal() {
+      document.getElementById('pronunciation-modal').classList.add('hidden');
+    }
+
+    function startModalSpeechRecognition() {
+      const targetText = document.getElementById('target-pronounce-en').textContent;
+      const btn = document.getElementById('modal-record-btn');
+      btn.classList.add('mic-recording', 'bg-rose-600');
+      btn.innerHTML = `<i class="fa-solid fa-wave-square"></i> <span>جاري الاستماع...</span>`;
+
+      const rec = createSpeechRecognizer(
+        (spoken) => {
+          const score = calculateSimilarity(spoken, targetText);
+          const box = document.getElementById('pronounce-feedback-box');
+          const scoreEl = document.getElementById('pronounce-score-badge');
+          const heardEl = document.getElementById('pronounce-heard-text');
+          const adviceEl = document.getElementById('pronounce-advice');
+
+          box.classList.remove('hidden');
+          heardEl.textContent = `You said: "${spoken}"`;
+
+          if (score >= 80) {
+            box.className = "rounded-2xl p-3.5 border border-emerald-200 bg-emerald-50 text-center space-y-1";
+            scoreEl.className = "en-text text-xl font-extrabold text-emerald-700";
+            scoreEl.textContent = `${score}% — C2 Native Clarity!`;
+            adviceEl.className = "text-xs font-bold text-emerald-800";
+            adviceEl.textContent = "نطق ممتاز وطلاقة واضحة جداً! استمر بهذا الأداء.";
+            addXP(20, "إتقان نطق جملة في المكتبة!");
+          } else if (score >= 50) {
+            box.className = "rounded-2xl p-3.5 border border-amber-200 bg-amber-50 text-center space-y-1";
+            scoreEl.className = "en-text text-xl font-extrabold text-amber-700";
+            scoreEl.textContent = `${score}% — Good Progress`;
+            adviceEl.className = "text-xs font-bold text-amber-800";
+            adviceEl.textContent = "جيد جداً! استمع للجملة مرة أخرى وحاول محاكاة نبرة الصوت.";
+            addXP(10, "تدريب نطق جيد!");
+          } else {
+            box.className = "rounded-2xl p-3.5 border border-rose-200 bg-rose-50 text-center space-y-1";
+            scoreEl.className = "en-text text-xl font-extrabold text-rose-700";
+            scoreEl.textContent = `${score}% — Try Again`;
+            adviceEl.className = "text-xs font-bold text-rose-800";
+            adviceEl.textContent = "حاول نطق الكلمات بوضوح وهدوء أكبر بالقرب من الميكروفون.";
+          }
+        },
+        () => {
+          btn.classList.remove('mic-recording', 'bg-rose-600');
+          btn.innerHTML = `<i class="fa-solid fa-microphone"></i> <span>اضغط وانطق</span>`;
+        },
+        () => {
+          btn.classList.remove('mic-recording', 'bg-rose-600');
+          btn.innerHTML = `<i class="fa-solid fa-microphone"></i> <span>اضغط وانطق</span>`;
+        }
+      );
+
+      if (rec) rec.start();
+    }
+
+    // Native Android speech callbacks (used by the APK wrapper).
+    window.__nativeSpeechResult = function(transcript) {
+      const cb = window.__nativeSpeechCallbacks;
+      if (cb && cb.onResult) cb.onResult(transcript);
+      if (cb && cb.onEnd) cb.onEnd();
+      window.__nativeSpeechCallbacks = null;
+    };
+    window.__nativeSpeechError = function(message) {
+      const cb = window.__nativeSpeechCallbacks;
+      if (cb && cb.onError) cb.onError(message);
+      if (cb && cb.onEnd) cb.onEnd();
+      window.__nativeSpeechCallbacks = null;
+    };
+
+    function configureGeminiKey() {
+      const entered = prompt("أدخل مفتاح Gemini API. سيُحفظ محلياً على هذا الهاتف فقط:", apiKey);
+      if (entered === null) return;
+      apiKey = entered.trim();
+      if (apiKey) localStorage.setItem("fluentc2_gemini_api_key", apiKey);
+      else localStorage.removeItem("fluentc2_gemini_api_key");
+      showToast(apiKey ? "تم حفظ مفتاح Gemini على هذا الجهاز" : "تم حذف مفتاح Gemini", !!apiKey);
+    }
+
+    // ---------------------------------------------------------
+    // 9. GEMINI API HELPER WITH EXPONENTIAL BACKOFF & UTILITIES
+    // ---------------------------------------------------------
+    async function callGeminiWithBackoff(payload, maxRetries = 4) {
+      if (!apiKey) throw new Error("GEMINI_API_KEY_MISSING");
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+      let delay = 1000;
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+          return await response.json();
+        } catch (err) {
+          if (attempt === maxRetries) throw err;
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2;
+        }
+      }
+    }
+
+    function calculateSimilarity(spoken, target) {
+      const clean = str => str.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(Boolean);
+      const sWords = clean(spoken);
+      const tWords = clean(target);
+      if (tWords.length === 0) return 0;
+      let matches = 0;
+      tWords.forEach(w => {
+        if (sWords.includes(w)) matches++;
+      });
+      return Math.min(100, Math.round((matches / tWords.length) * 100));
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
